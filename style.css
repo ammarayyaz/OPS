@@ -2772,14 +2772,56 @@ body[data-theme="dark"] .login-card .minimal-input:focus {
   font-family: var(--font-numbers);
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px 6px;
   transition: color 0.15s ease;
 }
 
 .btn-toggle-password:hover {
+  color: var(--color-terracotta);
+}
+
+.login-card .btn-toggle-password {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.login-card .btn-toggle-password:hover {
   color: #FFFFFF;
+}
+
+.password-feedback {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+.password-feedback.success {
+  background-color: rgba(46, 125, 50, 0.12);
+  color: #2E7D32;
+  border: 1px solid rgba(46, 125, 50, 0.28);
+}
+
+body[data-theme="dark"] .password-feedback.success {
+  background-color: rgba(76, 175, 80, 0.16);
+  color: #81C784;
+  border: 1px solid rgba(76, 175, 80, 0.35);
+}
+
+.password-feedback.error {
+  background-color: rgba(211, 47, 47, 0.12);
+  color: #D32F2F;
+  border: 1px solid rgba(211, 47, 47, 0.28);
+}
+
+body[data-theme="dark"] .password-feedback.error {
+  background-color: rgba(244, 67, 54, 0.16);
+  color: #E57373;
+  border: 1px solid rgba(244, 67, 54, 0.35);
 }
 
 /* Primary Sign In Button inside Terracotta Card - Pure High-Contrast White */

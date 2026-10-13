@@ -670,6 +670,46 @@
           </div>
         </div>
 
+        <!-- Card: Security Credentials & Password Management -->
+        <div class="settings-card" id="settingsPasswordCard">
+          <div class="card-head">
+            <span class="card-title">SECURITY &amp; PASSWORD</span>
+            <span class="status-pill tag-success" id="securityStatusPill">PROTECTED</span>
+          </div>
+          <form id="settingsPasswordForm" class="settings-form">
+            <div class="form-row">
+              <label class="form-label" for="settingCurrentPassword">Current Security Password / PIN</label>
+              <div class="password-input-wrap">
+                <input type="password" id="settingCurrentPassword" class="minimal-input" placeholder="Enter current password" required autocomplete="current-password">
+                <button type="button" class="btn-toggle-password" id="toggleCurrentPasswordBtn" aria-label="Toggle current password">SHOW</button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label" for="settingNewPassword">New Password / PIN</label>
+              <div class="password-input-wrap">
+                <input type="password" id="settingNewPassword" class="minimal-input" placeholder="New password (minimum 4 characters)" required autocomplete="new-password">
+                <button type="button" class="btn-toggle-password" id="toggleNewPasswordBtn" aria-label="Toggle new password">SHOW</button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label" for="settingConfirmPassword">Confirm New Password</label>
+              <div class="password-input-wrap">
+                <input type="password" id="settingConfirmPassword" class="minimal-input" placeholder="Repeat new password" required autocomplete="new-password">
+                <button type="button" class="btn-toggle-password" id="toggleConfirmPasswordBtn" aria-label="Toggle confirm password">SHOW</button>
+              </div>
+            </div>
+
+            <div class="password-feedback" id="passwordFeedbackMsg" style="display: none;"></div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-flat" id="savePasswordBtn">UPDATE PASSWORD</button>
+              <button type="button" class="btn-flat secondary" id="resetPasswordFormBtn">CLEAR</button>
+            </div>
+          </form>
+        </div>
+
         <!-- Card: Google Gemini AI API Configuration -->
         <div class="settings-card">
           <div class="card-head">

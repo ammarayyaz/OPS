@@ -46,6 +46,7 @@ const state = {
 
   authenticated: localStorage.getItem("ops_auth") === "true",
   userEmail: localStorage.getItem("ops_email") || "muhammad.ammar@mgapparel.com",
+  userPassword: localStorage.getItem("ops_password") || "demo1234",
   userName: localStorage.getItem("ops_user_name") || "Muhammad Ammar",
   tenant: localStorage.getItem("ops_tenant") || "MG Apparel Enterprise Tenant (Azure AD)",
   geminiApiKey: localStorage.getItem("ops_gemini_key") || "",
@@ -253,7 +254,21 @@ const dom = {
   saveGeminiKeyBtn: document.getElementById("saveGeminiKeyBtn"),
   testGeminiKeyBtn: document.getElementById("testGeminiKeyBtn"),
   clearGeminiKeyBtn: document.getElementById("clearGeminiKeyBtn"),
-  btnRunGeminiTriage: document.getElementById("btnRunGeminiTriage")
+  btnRunGeminiTriage: document.getElementById("btnRunGeminiTriage"),
+
+  // Settings Security & Password Elements
+  settingsPasswordCard: document.getElementById("settingsPasswordCard"),
+  securityStatusPill: document.getElementById("securityStatusPill"),
+  settingsPasswordForm: document.getElementById("settingsPasswordForm"),
+  settingCurrentPassword: document.getElementById("settingCurrentPassword"),
+  settingNewPassword: document.getElementById("settingNewPassword"),
+  settingConfirmPassword: document.getElementById("settingConfirmPassword"),
+  passwordFeedbackMsg: document.getElementById("passwordFeedbackMsg"),
+  savePasswordBtn: document.getElementById("savePasswordBtn"),
+  resetPasswordFormBtn: document.getElementById("resetPasswordFormBtn"),
+  toggleCurrentPasswordBtn: document.getElementById("toggleCurrentPasswordBtn"),
+  toggleNewPasswordBtn: document.getElementById("toggleNewPasswordBtn"),
+  toggleConfirmPasswordBtn: document.getElementById("toggleConfirmPasswordBtn")
 };
 
 // Initialize Application
@@ -262,6 +277,7 @@ function init() {
   bindControls();
   bindModals();
   bindSettings();
+  bindPasswordSettings();
   bindInspectionDrawer();
   bindCalendarActions();
   bindBriefingActions();
@@ -797,6 +813,97 @@ function bindSettings() {
   });
 }
 
+// Security Credentials & Password Management in Settings
+function bindPasswordSettings() {
+  const wireToggle = (btnId, input) => {
+    const btn = document.getElementById(btnId);
+    btn?.addEventListener("click", () => {
+      if (!input) return;
+      const isPass = input.type === "password";
+      input.type = isPass ? "text" : "password";
+      btn.textContent = isPass ? "HIDE" : "SHOW";
+    });
+  };
+
+  wireToggle("toggleCurrentPasswordBtn", dom.settingCurrentPassword);
+  wireToggle("toggleNewPasswordBtn", dom.settingNewPassword);
+  wireToggle("toggleConfirmPasswordBtn", dom.settingConfirmPassword);
+
+  // Form Submit for Updating Password
+  dom.settingsPasswordForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const currentPass = dom.settingCurrentPassword?.value.trim() || "";
+    const newPass = dom.settingNewPassword?.value.trim() || "";
+    const confirmPass = dom.settingConfirmPassword?.value.trim() || "";
+
+    const showFeedback = (msg, isSuccess) => {
+      if (!dom.passwordFeedbackMsg) return;
+      dom.passwordFeedbackMsg.style.display = "block";
+      dom.passwordFeedbackMsg.className = `password-feedback ${isSuccess ? "success" : "error"}`;
+      dom.passwordFeedbackMsg.textContent = msg;
+    };
+
+    // 1. Verify current password
+    if (currentPass !== state.userPassword) {
+      showFeedback("Current password does not match. Please enter your existing security PIN / password.", false);
+      showToast("Current password does not match.");
+      dom.settingCurrentPassword?.focus();
+      return;
+    }
+
+    // 2. Validate new password length
+    if (newPass.length < 4) {
+      showFeedback("New password must be at least 4 characters in length.", false);
+      showToast("New password must be at least 4 characters.");
+      dom.settingNewPassword?.focus();
+      return;
+    }
+
+    // 3. Confirm password matching
+    if (newPass !== confirmPass) {
+      showFeedback("New passwords do not match. Please verify confirmation input.", false);
+      showToast("New passwords do not match.");
+      dom.settingConfirmPassword?.focus();
+      return;
+    }
+
+    // 4. Save and persist new credentials
+    state.userPassword = newPass;
+    localStorage.setItem("ops_password", newPass);
+
+    if (dom.loginPassword) {
+      dom.loginPassword.value = newPass;
+    }
+
+    // Clear form inputs
+    if (dom.settingCurrentPassword) dom.settingCurrentPassword.value = "";
+    if (dom.settingNewPassword) dom.settingNewPassword.value = "";
+    if (dom.settingConfirmPassword) dom.settingConfirmPassword.value = "";
+
+    showFeedback("Security credentials updated! Your new password is now active.", true);
+    showToast("Password updated successfully.");
+
+    if (dom.securityStatusPill) {
+      dom.securityStatusPill.className = "status-pill tag-success";
+      dom.securityStatusPill.textContent = "UPDATED";
+      setTimeout(() => {
+        if (dom.securityStatusPill) dom.securityStatusPill.textContent = "PROTECTED";
+      }, 3000);
+    }
+  });
+
+  // Clear / Reset Button
+  dom.resetPasswordFormBtn?.addEventListener("click", () => {
+    if (dom.settingCurrentPassword) dom.settingCurrentPassword.value = "";
+    if (dom.settingNewPassword) dom.settingNewPassword.value = "";
+    if (dom.settingConfirmPassword) dom.settingConfirmPassword.value = "";
+    if (dom.passwordFeedbackMsg) {
+      dom.passwordFeedbackMsg.style.display = "none";
+      dom.passwordFeedbackMsg.textContent = "";
+    }
+  });
+}
+
 // Auth & Security Login Gateway
 function initAuthAndSettings() {
   if (!state.authenticated) {
@@ -806,6 +913,7 @@ function initAuthAndSettings() {
   }
 
   if (dom.loginEmail) dom.loginEmail.value = state.userEmail;
+  if (dom.loginPassword) dom.loginPassword.value = state.userPassword;
   if (dom.loginInitialsAvatar) dom.loginInitialsAvatar.textContent = getEmailInitials(state.userEmail);
   if (dom.settingUserEmail) dom.settingUserEmail.value = state.userEmail;
   if (dom.settingTenant) dom.settingTenant.value = state.tenant;
@@ -987,6 +1095,17 @@ function triggerRobotGreeting(email, onComplete) {
 
 function handleDirectLogin() {
   const email = dom.loginEmail?.value.trim() || "muhammad.ammar@mgapparel.com";
+  const password = dom.loginPassword?.value || "";
+
+  // Verify PIN / Password
+  if (state.userPassword && password && password !== state.userPassword) {
+    showToast("Incorrect security PIN or password. Please try again.");
+    if (dom.loginPassword) {
+      dom.loginPassword.focus();
+    }
+    return;
+  }
+
   const displayName = formatDisplayName(email);
 
   triggerRobotGreeting(email, () => {
