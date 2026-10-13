@@ -1,5 +1,7 @@
 node_modules/
 .remote-code-express/
+dist/
+.vercel/
 *.log
 .DS_Store
 Thumbs.db
