@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OPS</title>
+  <meta name="description" content="Ultra-minimal executive dashboard synced with Microsoft Outlook for live pending and aligned task management.">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/century-gothic" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script>
+    (function() {
+      try {
+        const theme = localStorage.getItem("ops_theme") || "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body data-theme="light">
+  <!-- DEDICATED SECURITY LOGIN PAGE (Website Gateway) -->
+  <div class="login-page-screen" id="loginScreen" style="display: none;">
+
+    <!-- Minimal Top Controls (Zero Dots, Zero Extra Text) -->
+    <header class="login-minimal-bar">
+      <div class="login-bar-logo">OPS</div>
+      <button type="button" class="btn-login-theme-toggle" id="loginThemeToggleBtn" aria-label="Toggle Theme">
+        <span id="loginThemeLabel">LIGHT</span>
+      </button>
+    </header>
+
+    <!-- Centered Card Stage -->
+    <div class="login-card-stage">
+      <div class="login-card">
+        <div class="login-brand-header">
+          <div class="user-initials-circle login-avatar" id="loginInitialsAvatar">MA</div>
+          <h1 class="login-brand-title">OPS</h1>
+        </div>
+
+        <form id="directLoginForm" class="login-form">
+          <div class="form-row">
+            <label class="form-label" for="loginEmail">Outlook / Microsoft Account ID</label>
+            <input type="email" id="loginEmail" class="minimal-input" value="muhammad.ammar@mgapparel.com" placeholder="name@company.com" required>
+          </div>
+
+          <div class="form-row">
+            <label class="form-label" for="loginPassword">Security PIN / Password</label>
+            <div class="password-input-wrap">
+              <input type="password" id="loginPassword" class="minimal-input" placeholder="••••••••••••" value="demo1234">
+              <button type="button" class="btn-toggle-password" id="toggleLoginPasswordBtn" aria-label="Show or hide password">SHOW</button>
+            </div>
+          </div>
+
+          <div class="login-actions">
+            <button type="submit" class="btn-flat" id="directSignInBtn">SIGN IN TO OPS</button>
+            <button type="button" class="btn-sso-microsoft" id="directMsSignInBtn">
+              <svg class="ms-logo-icon" viewBox="0 0 21 21" width="18" height="18">
+                <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+                <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+                <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+                <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+              </svg>
+              <span>SIGN IN WITH MICROSOFT 365</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROBOT WELCOME MOTION GRAPHIC SCREEN (Claude Code / Minimalist Bot Greeting) -->
+  <div class="robot-welcome-screen" id="robotWelcomeScreen" style="display: none;" aria-hidden="true">
+    <div class="robot-welcome-content">
+      <div class="robot-stage">
+        <!-- SVG Robot with Animated Waving Hand & Blinking Eyes -->
+        <svg class="robot-character" viewBox="0 0 160 180" width="130" height="150" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Antenna -->
+          <line x1="80" y1="26" x2="80" y2="44" stroke="#A53C08" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="80" cy="22" r="7" fill="#F05500"/>
+          <circle cx="80" cy="22" r="3" fill="#FFFFFF"/>
+          
+          <!-- Ears / Side Bolts -->
+          <rect x="36" y="60" width="6" height="14" rx="3" fill="#7A2904"/>
+          <rect x="118" y="60" width="6" height="14" rx="3" fill="#7A2904"/>
+          
+          <!-- Robot Head -->
+          <rect x="40" y="44" width="80" height="48" rx="14" fill="#FFFFFF" stroke="#22262E" stroke-width="3"/>
+          
+          <!-- Visor / Screen -->
+          <rect x="48" y="52" width="64" height="32" rx="8" fill="#181C24"/>
+          
+          <!-- Left Eye -->
+          <g class="robot-eye robot-eye-left">
+            <ellipse cx="64" cy="68" rx="6" ry="6" fill="#F05500"/>
+            <circle cx="66" cy="66" r="2" fill="#FFFFFF"/>
+          </g>
+          
+          <!-- Right Eye -->
+          <g class="robot-eye robot-eye-right">
+            <ellipse cx="96" cy="68" rx="6" ry="6" fill="#F05500"/>
+            <circle cx="98" cy="66" r="2" fill="#FFFFFF"/>
+          </g>
+          
+          <!-- Cheerful Visor Smile (Subtle pixel arc) -->
+          <path d="M74 74 Q80 78 86 74" stroke="#F05500" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- Neck -->
+          <rect x="74" y="92" width="12" height="6" rx="2" fill="#7A2904"/>
+
+          <!-- Robot Body / Torso -->
+          <rect x="50" y="98" width="60" height="52" rx="12" fill="#FFFFFF" stroke="#22262E" stroke-width="3"/>
+          
+          <!-- Chest Core / Status Badge -->
+          <rect x="62" y="108" width="36" height="20" rx="6" fill="#F1F3F5" stroke="#E2E5E9" stroke-width="1.5"/>
+          <circle cx="70" cy="118" r="3.5" fill="#A53C08"/>
+          <circle cx="80" cy="118" r="3.5" fill="#F05500"/>
+          <circle cx="90" cy="118" r="3.5" fill="#2E7D32"/>
+          
+          <!-- Subtle Vents -->
+          <line x1="66" y1="136" x2="94" y2="136" stroke="#C5CAD0" stroke-width="2" stroke-linecap="round"/>
+          <line x1="70" y1="141" x2="90" y2="141" stroke="#C5CAD0" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- Left Arm (Resting at side) -->
+          <g class="robot-left-arm">
+            <path d="M50 108 C40 114 38 126 42 136" stroke="#22262E" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="42" cy="138" r="5" fill="#A53C08"/>
+          </g>
+
+          <!-- Right Arm & Waving Hand (Animated pivot at shoulder/elbow) -->
+          <g class="robot-waving-arm">
+            <path d="M110 108 C122 104 128 92 132 80" stroke="#22262E" stroke-width="6" stroke-linecap="round"/>
+            <!-- Cute Waving Hand / Claws -->
+            <g class="robot-hand">
+              <circle cx="132" cy="78" r="6" fill="#A53C08"/>
+              <path d="M128 74 C130 68 136 68 138 74" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="137" cy="71" r="2" fill="#F05500"/>
+            </g>
+          </g>
+
+          <!-- Shadow underneath floating bot -->
+          <ellipse class="robot-shadow" cx="80" cy="168" rx="26" ry="5" fill="rgba(0, 0, 0, 0.1)"/>
+        </svg>
+      </div>
+
+      <!-- Dialogue & Welcoming Name -->
+      <div class="robot-dialogue-box">
+        <div class="robot-greeting-text" id="robotGreetingText">Hello, <span class="robot-name-accent">Muhammad Ammar</span>!</div>
+        <div class="robot-greeting-sub">LOGGING YOU INTO OPS PORTAL...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Top Bar (Active on Mobile <= 860px) -->
+  <header class="mobile-topbar" id="mobileTopbar">
+    <div class="mobile-brand-group">
+      <div class="mobile-brand-title">OPS</div>
+    </div>
+    <div class="mobile-topbar-controls">
+      <button type="button" class="btn-mobile-action mobile-add-btn" id="mobileQuickAddBtn" aria-label="Quick Add Action">
+        <span>+ ADD</span>
+      </button>
+      <span class="mobile-sync-chip" id="mobileSyncChip">SYNC: ACTIVE</span>
+      <button type="button" class="btn-mobile-action" id="mobileThemeToggleBtn" aria-label="Toggle Theme">
+        <span id="mobileThemeLabel">LIGHT</span>
+      </button>
+      <button type="button" class="btn-mobile-action" id="mobileMenuToggleBtn" aria-label="Open Navigation Drawer">
+        <svg class="mobile-nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Backdrop -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Left Fixed Edge-Flush Sidebar (Desktop: Flush Left / Mobile: Slide-in Drawer) -->
+  <aside class="app-sidebar" id="appSidebar">
+    <div class="sidebar-top">
+      <div class="brand-block" id="brandBlock">
+        <div class="user-initials-circle" id="sidebarUserInitials" aria-label="Account: MA" title="muhammad.ammar@mgapparel.com">MA</div>
+        <span id="sidebarAccountLabel" class="sidebar-account-label" style="display: none;">muhammad.ammar@mgapparel.com</span>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Main Navigation">
+        <!-- Quick Add Action Directly in Navbar -->
+        <button type="button" class="nav-item nav-action-add" id="navQuickAddBtn">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span class="nav-label">Quick Add...</span>
+        </button>
+
+        <button type="button" class="nav-item active" data-tab="dashboard" id="navTabDashboard">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span class="nav-label">Dashboard</span>
+        </button>
+
+        <button type="button" class="nav-item" data-tab="pending" id="navTabPending">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+            <polyline points="12 6 12 12 16 14"></polyline>
+            <circle cx="12" cy="12" r="9"></circle>
+          </svg>
+          <span class="nav-label">Pending Tasks</span>
+          <span class="nav-counter" id="navPendingCount">0</span>
+        </button>
+
+        <button type="button" class="nav-item" data-tab="aligned" id="navTabAligned">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span class="nav-label">Aligned Tasks</span>
+          <span class="nav-counter" id="navAlignedCount">0</span>
+        </button>
+
+        <button type="button" class="nav-item" data-tab="calendar" id="navTabCalendar">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+            <rect x="3" y="4" width="18" height="18"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span class="nav-label">Calendar &amp; Focus</span>
+          <span class="nav-counter" id="navCalendarCount">4</span>
+        </button>
+
+        <button type="button" class="nav-item" data-tab="briefing" id="navTabBriefing">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span class="nav-label">Executive Briefing</span>
+          <span class="nav-counter" id="navBriefingCount">2</span>
+        </button>
+
+        <button type="button" class="nav-item" data-tab="settings" id="navTabSettings">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+            <line x1="4" y1="21" x2="4" y2="14"></line>
+            <line x1="4" y1="10" x2="4" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12" y2="3"></line>
+            <line x1="20" y1="21" x2="20" y2="16"></line>
+            <line x1="20" y1="12" x2="20" y2="3"></line>
+            <line x1="1" y1="14" x2="7" y2="14"></line>
+            <line x1="9" y1="8" x2="15" y2="8"></line>
+            <line x1="17" y1="16" x2="23" y2="16"></line>
+          </svg>
+          <span class="nav-label">Settings</span>
+        </button>
+
+        <!-- Dynamic Custom Navbar Tabs Section (Hidden by default) -->
+        <div class="sidebar-section-divider" id="sidebarSectionDivider" style="display: none;">
+          <span class="sidebar-section-tag">CUSTOM WORKSPACES</span>
+        </div>
+        <div id="customNavTabsContainer" class="custom-nav-container">
+          <!-- Dynamically inserted tabs -->
+        </div>
+
+        <!-- Add Option Directly in Navbar (Hidden from view) -->
+        <button type="button" class="nav-item nav-action-tab" id="navAddCustomTabBtn" style="display: none;">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+            <rect x="3" y="3" width="18" height="18"></rect>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          <span class="nav-label">+ Add Tab to Nav</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="sync-status-indicator" id="sidebarSyncBox" style="display: none;">
+        <div class="sync-meta-label">OUTLOOK GRAPH SYNC</div>
+        <div class="sync-state-text" id="sidebarSyncStatusText">STATUS: ACTIVE // 14:02:15</div>
+      </div>
+
+      <div class="sidebar-actions">
+        <button type="button" class="btn-theme-toggle" id="themeToggleBtn" aria-label="Toggle Theme">
+          <span id="themeToggleLabel">THEME: LIGHT</span>
+        </button>
+        <button type="button" class="btn-sidebar-auth" id="sidebarAuthBtn">
+          <span id="sidebarAuthLabel">DISCONNECT</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Viewport Content Area -->
+  <main class="app-main" id="appMain">
+    
+    <!-- TOP NOTIFICATION BANNER (Clean, text-only, no icons, no glow) -->
+    <div class="system-announcement" id="systemBanner" style="display: none;">
+      <span class="banner-title">MICROSOFT GRAPH DELTA SYNC</span>
+      <span class="banner-desc" id="bannerDesc"></span>
+      <button type="button" class="banner-dismiss" id="bannerDismissBtn">DISMISS</button>
+    </div>
+
+    <!-- TAB 1: EXECUTIVE DASHBOARD -->
+    <section class="tab-view active" id="tabDashboard" aria-label="Executive Dashboard">
+      <header class="view-header">
+        <div class="header-titles">
+          <h1 class="view-title">Executive Dashboard</h1>
+          <p class="view-subtitle" id="dashboardSyncTime">Live Feed</p>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn-flat" id="dashboardRefreshBtn">FORCE SYNC</button>
+          <button type="button" class="btn-flat secondary" id="dashboardQuickAddBtn">+ NEW TASK</button>
+        </div>
+      </header>
+
+      <!-- KPI METRICS STRIP (Matches the Japanese Orange Sample Card Style) -->
+      <section class="kpi-grid">
+        <!-- Highlighted / Featured Tile in Deep Terracotta / Burnt Orange -->
+        <div class="kpi-card featured">
+          <div class="kpi-header">
+            <span class="kpi-title">PENDING ACTION</span>
+            <span class="kpi-tag">AWAITING TRIAGE</span>
+          </div>
+          <div class="kpi-metric-large" id="kpiPendingValue">00</div>
+          <div class="kpi-footer" id="kpiPendingFooter">0 Flagged Outlook Emails // 0 To Do Tasks</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">ALIGNED TASKS</span>
+            <span class="kpi-tag">GOAL LINKED</span>
+          </div>
+          <div class="kpi-metric-large" id="kpiAlignedValue">00</div>
+          <div class="kpi-footer" id="kpiAlignedFooter">0 Strategic Alignments</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">CRITICAL TODAY</span>
+            <span class="kpi-tag">DUE BY 18:00</span>
+          </div>
+          <div class="kpi-metric-large" id="kpiTodayValue">00</div>
+          <div class="kpi-footer" id="kpiTodayFooter">0 Urgent Escalations Today</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">ALIGNMENT RATIO</span>
+            <span class="kpi-tag">FOCUS HEALTH</span>
+          </div>
+          <div class="kpi-metric-large" id="kpiRatioValue">0%</div>
+          <div class="kpi-footer" id="kpiRatioFooter">Awaiting Activity Data</div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS SECTION (Directly tied to Microsoft Outlook Mail, Calendar, & Tasks) -->
+      <section class="dashboard-analytics-grid">
+        <!-- Outlook Incoming Volume & Category Distribution -->
+        <div class="analytics-card">
+          <div class="card-head">
+            <span class="card-title">VOLUME &amp; CATEGORY ALLOCATION</span>
+          </div>
+          <div class="stacked-bar-container" id="stackedBarContainer">
+            <div class="empty-chart-notice" id="stackedBarNotice">
+              <span class="empty-notice-title">NO ACTIVITY RECORDED</span>
+            </div>
+          </div>
+          <!-- Minimal Legend (Hidden when empty or displayed when data exists) -->
+          <div class="chart-text-legend" id="stackedBarLegend" style="display: none;">
+            <span class="legend-chip chip-rust">FLAGGED EMAILS</span>
+            <span class="legend-chip chip-terracotta">CALENDAR INVITES</span>
+            <span class="legend-chip chip-vivid">MICROSOFT TO DO</span>
+            <span class="legend-chip chip-tangerine">VIP THREADS</span>
+            <span class="legend-chip chip-peach">@MENTIONS</span>
+          </div>
+        </div>
+
+        <!-- Outlook Daily Triage & Clearance Balance (Charcoal vs Orange Contrast) -->
+        <div class="analytics-card">
+          <div class="card-head">
+            <span class="card-title">DAILY TRIAGE &amp; CLEARANCE</span>
+          </div>
+          <div class="velocity-chart" id="velocityContainer">
+            <div class="empty-chart-notice" id="velocityNotice">
+              <span class="empty-notice-title">NO TRIAGE DATA LOGGED</span>
+            </div>
+          </div>
+          <div class="chart-text-legend" id="velocityLegend" style="display: none;">
+            <span class="legend-chip chip-vivid">CLEARED & RESOLVED (ORANGE)</span>
+            <span class="legend-chip chip-charcoal">PENDING / UNREAD (CHARCOAL)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TWO COLUMN WORKSPACE: IMMEDIATE PENDING QUEUE + STRATEGIC ALIGNED SNAPSHOT -->
+      <section class="split-view-container">
+        <!-- Left: Immediate Pending Focus Queue -->
+        <div class="split-col">
+          <div class="section-subhead">
+            <h2 class="subhead-title">Pending Action Items</h2>
+            <button type="button" class="btn-text-link" data-switch-tab="pending" id="dashViewPendingBtn">VIEW ALL PENDING</button>
+          </div>
+          <div class="cards-list" id="dashboardPendingDeck">
+            <!-- Rendered dynamically with strict minimal card anatomy -->
+          </div>
+        </div>
+
+        <!-- Right: Aligned Strategic Objectives -->
+        <div class="split-col">
+          <div class="section-subhead">
+            <h2 class="subhead-title">Active Strategic Alignments</h2>
+            <button type="button" class="btn-text-link" data-switch-tab="aligned" id="dashViewAlignedBtn">VIEW ALL ALIGNED</button>
+          </div>
+          <div class="cards-list" id="dashboardAlignedDeck">
+            <!-- Rendered dynamically with strict minimal card anatomy -->
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- TAB 2: PENDING TASKS -->
+    <section class="tab-view" id="tabPending" aria-label="Pending Tasks View">
+      <header class="view-header">
+        <div class="header-titles">
+          <h1 class="view-title">Pending Tasks</h1>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn-flat" id="pendingBatchAlignBtn">ALIGN SELECTED</button>
+          <button type="button" class="btn-flat secondary" id="pendingNewItemBtn">+ ADD MANUAL TASK</button>
+        </div>
+      </header>
+
+      <!-- Filter Controls Bar (Zero Border, Flat Pills) -->
+      <div class="filter-strip">
+        <div class="search-box">
+          <input type="text" id="pendingSearchInput" class="minimal-input" placeholder="SEARCH PENDING TASKS..." aria-label="Search pending tasks">
+        </div>
+        <div class="filter-pills" role="radiogroup" aria-label="Filter source">
+          <button type="button" class="filter-pill active" data-filter="all" id="pillAll">ALL (0)</button>
+          <button type="button" class="filter-pill" data-filter="mail" id="pillMail">FLAGGED EMAIL (0)</button>
+          <button type="button" class="filter-pill" data-filter="todo" id="pillTodo">TO DO (0)</button>
+          <button type="button" class="filter-pill" data-filter="urgent" id="pillUrgent">CRITICAL (0)</button>
+        </div>
+      </div>
+
+      <!-- Main Pending Task Deck -->
+      <div class="tasks-deck" id="fullPendingDeck">
+        <!-- Dynamic card list -->
+      </div>
+    </section>
+
+    <!-- TAB 3: ALIGNED TASKS -->
+    <section class="tab-view" id="tabAligned" aria-label="Aligned Tasks View">
+      <header class="view-header">
+        <div class="header-titles">
+          <h1 class="view-title">Aligned Tasks</h1>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn-flat" id="newAlignmentBtn">+ MAP NEW ALIGNMENT</button>
+        </div>
+      </header>
+
+      <!-- Strategic Project Accordion Blocks -->
+      <div class="milestones-stack" id="milestonesContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- TAB 4: CALENDAR & FOCUS SCHEDULING -->
+    <section class="tab-view" id="tabCalendar" aria-label="Calendar & Focus Scheduling View">
+      <header class="view-header">
+        <div class="header-titles">
+          <h1 class="view-title">Calendar &amp; Focus</h1>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn-flat" id="quickBlockFocusBtn">+ BLOCK FOCUS SLOT</button>
+          <button type="button" class="btn-flat secondary" id="autoBufferBtn">AUTO-INSERT 10M BUFFERS</button>
+        </div>
+      </header>
+
+      <!-- Focus & Calendar KPI Metrics -->
+      <section class="kpi-grid">
+        <div class="kpi-card featured">
+          <div class="kpi-header">
+            <span class="kpi-title">DEDICATED FOCUS</span>
+            <span class="kpi-tag">CALENDAR PROTECTED</span>
+          </div>
+          <div class="kpi-metric-large" id="kpiFocusHours">4.5h</div>
+          <div class="kpi-footer" id="kpiFocusFooter">3 Deep Work Sessions Active</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">MEETING LOAD</span>
+            <span class="kpi-tag">OUTLOOK CALENDAR</span>
+          </div>
+          <div class="kpi-metric-large" id="kpiMeetingHours">3.5h</div>
+          <div class="kpi-footer" id="kpiMeetingFooter">4 Scheduled Engagements</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">EXECUTION RATIO</span>
+            <span class="kpi-tag">WORKDAY BALANCE</span>
+          </div>
+          <div class="kpi-metric-large" id="kpiFocusRatio">56%</div>
+          <div class="kpi-footer" id="kpiFocusRatioFooter">Focus vs Meeting Health Ratio</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">BUFFER INTEGRITY</span>
+            <span class="kpi-tag">ACTIVE RECOVERY</span>
+          </div>
+          <div class="kpi-metric-large" id="kpiBufferStatus">100%</div>
+          <div class="kpi-footer" id="kpiBufferFooter">10m Buffers Protected Between Calls</div>
+        </div>
+      </section>
+
+      <!-- Calendar Workspaces Split View -->
+      <section class="split-view-container">
+        <!-- Left: Today's Outlook Meetings & Dossiers -->
+        <div class="split-col">
+          <div class="section-subhead">
+            <h2 class="subhead-title">Today's Calendar Meetings</h2>
+            <button type="button" class="btn-text-link" id="syncCalendarBtn">REFRESH EXCHANGE</button>
+          </div>
+          <div class="calendar-agenda-deck" id="calendarMeetingsDeck">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Right: Dedicated Focus Holds (Time-Blocked Slots) -->
+        <div class="split-col">
+          <div class="section-subhead">
+            <h2 class="subhead-title">Focus Holds</h2>
+            <button type="button" class="btn-text-link" id="addCustomHoldBtn">+ NEW HOLD</button>
+          </div>
+          <div class="focus-holds-deck" id="focusHoldsDeck">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- TAB 5: EXECUTIVE BRIEFING & DAILY DIGESTS -->
+    <section class="tab-view" id="tabBriefing" aria-label="Executive Briefing & Daily Digests View">
+      <header class="view-header">
+        <div class="header-titles">
+          <h1 class="view-title">Executive Briefing</h1>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn-flat" id="generateMorningBriefBtn">REFRESH MORNING BRIEFING</button>
+          <button type="button" class="btn-flat secondary" id="runEodClearanceBtn">RUN EOD CLEARANCE</button>
+        </div>
+      </header>
+
+      <!-- Briefings Split Grid: Morning & EOD Digests -->
+      <section class="briefing-syntheses-grid">
+        <!-- Morning Briefing Card -->
+        <div class="briefing-card" id="morningBriefingCard">
+          <div class="briefing-card-head">
+            <div>
+              <span class="briefing-badge">08:30 MORNING BRIEFING</span>
+              <h3 class="briefing-title">Executive Day Briefing</h3>
+            </div>
+            <span class="card-meta" id="morningBriefDate">TODAY // 08:30 GRAPH SYNC</span>
+          </div>
+          <div class="briefing-content" id="morningBriefContent">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- EOD Clearance Digest Card -->
+        <div class="briefing-card" id="eodClearanceCard">
+          <div class="briefing-card-head">
+            <div>
+              <span class="briefing-badge">17:30 EOD CLEARANCE</span>
+              <h3 class="briefing-title">End-of-Day Clearance Digest</h3>
+            </div>
+            <span class="card-meta" id="eodBriefDate">TODAY // 17:30 GRAPH SYNC</span>
+          </div>
+          <div class="briefing-content" id="eodBriefContent">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- VIP Client Watchlist & Task Delegation Ledger -->
+      <section class="split-view-container" style="margin-top: 24px;">
+        <!-- VIP Counterparty Watchlist -->
+        <div class="split-col">
+          <div class="section-subhead">
+            <h2 class="subhead-title">VIP Watchlist</h2>
+          </div>
+          <div class="watchlist-manager">
+            <div class="watchlist-add-row">
+              <input type="email" id="newVipInput" class="minimal-input" placeholder="e.g. board@mgapparel.com">
+              <button type="button" class="btn-flat" id="addVipBtn">+ ADD VIP</button>
+            </div>
+            <div class="watchlist-chips" id="vipChipsContainer">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Task Delegation Gateway -->
+        <div class="split-col">
+          <div class="section-subhead">
+            <h2 class="subhead-title">Task Delegation Gateway</h2>
+            <button type="button" class="btn-text-link" id="refreshDelegationsBtn">SYNC ASSIGNEES</button>
+          </div>
+          <div class="delegation-deck" id="delegationDeck">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- TAB 6: SETTINGS -->
+    <section class="tab-view" id="tabSettings" aria-label="Settings View">
+      <header class="view-header">
+        <div class="header-titles">
+          <h1 class="view-title">Settings &amp; Sync</h1>
+        </div>
+      </header>
+
+      <div class="settings-grid">
+        <!-- Card 1: Microsoft Account Connection -->
+        <div class="settings-card">
+          <div class="card-head">
+            <span class="card-title">MICROSOFT ACCOUNT SYNC</span>
+          </div>
+          <div class="settings-form">
+            <div class="form-row">
+              <label class="form-label" for="settingUserEmail">Connected Microsoft Identity</label>
+              <input type="email" id="settingUserEmail" class="minimal-input" value="muhammad.ammar@mgapparel.com">
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="settingTenant">Entra ID Tenant Authority</label>
+              <input type="text" id="settingTenant" class="minimal-input" value="MG Apparel Enterprise Tenant (Azure AD)">
+            </div>
+            <div class="form-row">
+              <label class="form-label">Connection Status</label>
+              <div class="status-text-field" id="settingsConnectionLabel">AUTHENTICATED // LIVE DELTA QUERY ACTIVE</div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="settingSyncFreq">Sync Frequency</label>
+              <select id="settingSyncFreq" class="minimal-select">
+                <option value="webhook" selected>Real-time (Microsoft Graph Webhook Subscription)</option>
+                <option value="5m">Every 5 Minutes (Polling)</option>
+                <option value="15m">Every 15 Minutes</option>
+                <option value="manual">Manual Trigger Only</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-flat" id="saveIdentityBtn">SAVE EMAIL IDENTITY</button>
+              <button type="button" class="btn-flat secondary" id="settingsSyncNowBtn">SYNC GRAPH NOW</button>
+              <button type="button" class="btn-flat secondary" id="settingsDisconnectBtn">LOCK / SIGN OUT</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card: Google Gemini AI API Configuration -->
+        <div class="settings-card">
+          <div class="card-head">
+            <span class="card-title">GOOGLE GEMINI AI API</span>
+            <span class="status-pill tag-normal" id="geminiStatusPill">NOT CONNECTED</span>
+          </div>
+          <div class="settings-form">
+            <div class="form-row">
+              <label class="form-label" for="settingGeminiApiKey">Gemini API Key</label>
+              <div class="api-key-input-group">
+                <input type="password" id="settingGeminiApiKey" class="minimal-input" placeholder="AIzaSy... (Paste Google Gemini API Key)">
+                <button type="button" class="btn-micro" id="toggleGeminiKeyVisibility">SHOW</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="settingGeminiModel">Gemini AI Model</label>
+              <select id="settingGeminiModel" class="minimal-select">
+                <option value="gemini-1.5-flash" selected>gemini-1.5-flash (Fast Executive Triage)</option>
+                <option value="gemini-1.5-pro">gemini-1.5-pro (Deep Reasoning &amp; Analysis)</option>
+                <option value="gemini-2.0-flash">gemini-2.0-flash (Next-Gen High Speed)</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-flat" id="saveGeminiKeyBtn">CONNECT GEMINI API</button>
+              <button type="button" class="btn-flat secondary" id="testGeminiKeyBtn">TEST CONNECTION</button>
+              <button type="button" class="btn-flat secondary" id="clearGeminiKeyBtn">REMOVE KEY</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Appearance & Theme Settings -->
+        <div class="settings-card">
+          <div class="card-head">
+            <span class="card-title">APPEARANCE &amp; PALETTE</span>
+          </div>
+          <div class="settings-form">
+            <div class="form-row">
+              <label class="form-label">Theme Mode</label>
+              <div class="theme-button-group">
+                <button type="button" class="btn-segmented active" id="setThemeLight">LIGHT (#FFFFFF)</button>
+                <button type="button" class="btn-segmented" id="setThemeDark">DARK (#05080A)</button>
+                <button type="button" class="btn-segmented" id="setThemeTint">PEACH TINT (#FFF3EB)</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="colorTerracotta">Primary Accent (Terracotta / Burnt Orange)</label>
+              <div class="color-picker-row">
+                <input type="color" id="colorTerracotta" class="color-input" value="#A53C08">
+                <input type="text" id="colorTerracottaHex" class="minimal-input hex-input" value="#A53C08">
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="colorVivid">Signal Accent (Vivid Orange)</label>
+              <div class="color-picker-row">
+                <input type="color" id="colorVivid" class="color-input" value="#F05500">
+                <input type="text" id="colorVividHex" class="minimal-input hex-input" value="#F05500">
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="colorRust">Base Contrast Accent (Deep Rust)</label>
+              <div class="color-picker-row">
+                <input type="color" id="colorRust" class="color-input" value="#7A2904">
+                <input type="text" id="colorRustHex" class="minimal-input hex-input" value="#7A2904">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-flat" id="applyColorsBtn">APPLY PALETTE</button>
+              <button type="button" class="btn-flat secondary" id="resetColorsBtn">RESET DEFAULTS</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Microsoft 365 Ecosystem Configuration -->
+        <div class="settings-card">
+          <div class="card-head">
+            <span class="card-title">M365 ECOSYSTEM INTEGRATIONS</span>
+          </div>
+          <div class="settings-form">
+            <div class="form-row">
+              <div class="checkbox-row" style="margin-bottom: 0;">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="prefSyncTeams" checked>
+                  <span class="check-box-square"></span>
+                  <span class="check-label">Sync Microsoft Teams @Mentions to Pending Triage</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="checkbox-row" style="margin-bottom: 0;">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="prefPreMeetingDossiers" checked>
+                  <span class="check-box-square"></span>
+                  <span class="check-label">Auto-generate Pre-Meeting Dossiers (15 min before call)</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="checkbox-row" style="margin-bottom: 0;">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="prefAutoBuffers" checked>
+                  <span class="check-box-square"></span>
+                  <span class="check-label">Enforce 10-Minute Buffer Time Protection between meetings</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="checkbox-row" style="margin-bottom: 0;">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="prefAiTriage" checked>
+                  <span class="check-box-square"></span>
+                  <span class="check-label">AI Action Extraction &amp; Executive Thread Summarization</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="checkbox-row" style="margin-bottom: 0;">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="prefMaskEmails">
+                  <span class="check-box-square"></span>
+                  <span class="check-label">Privacy Shield: Redact sensitive counterparty client names</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-actions" style="margin-top: 14px;">
+              <button type="button" class="btn-flat secondary" id="clearCacheBtn">RESET WORKSPACE DATA CACHE</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Gradient Color Palettes & Engine -->
+        <div class="settings-card">
+          <div class="card-head">
+            <span class="card-title">GRADIENT COLOR PALETTES</span>
+          </div>
+          <div class="settings-form">
+            <div class="form-row">
+              <label class="form-label">Curated Gradient Presets</label>
+              <div class="gradient-presets-grid">
+                <button type="button" class="btn-gradient-card active" data-gradient-preset="terracotta-flame">
+                  <div class="gradient-card-swatch swatch-terracotta-flame"></div>
+                  <span class="gradient-card-name">TERRACOTTA FLAME</span>
+                </button>
+                <button type="button" class="btn-gradient-card" data-gradient-preset="sunrise-amber">
+                  <div class="gradient-card-swatch swatch-sunrise-amber"></div>
+                  <span class="gradient-card-name">SUNRISE AMBER</span>
+                </button>
+                <button type="button" class="btn-gradient-card" data-gradient-preset="deep-ember">
+                  <div class="gradient-card-swatch swatch-deep-ember"></div>
+                  <span class="gradient-card-name">DEEP EMBER &amp; RUST</span>
+                </button>
+                <button type="button" class="btn-gradient-card" data-gradient-preset="charcoal-fire">
+                  <div class="gradient-card-swatch swatch-charcoal-fire"></div>
+                  <span class="gradient-card-name">CHARCOAL &amp; SIGNAL FIRE</span>
+                </button>
+                <button type="button" class="btn-gradient-card" data-gradient-preset="peach-silk">
+                  <div class="gradient-card-swatch swatch-peach-silk"></div>
+                  <span class="gradient-card-name">PEACH SILK &amp; TERRACOTTA</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-row" style="margin-top: 14px;">
+              <label class="form-label">Custom Gradient Studio</label>
+              <div class="custom-gradient-builder">
+                <div class="builder-inputs">
+                  <div class="builder-col">
+                    <span class="builder-sublabel">Gradient Start</span>
+                    <div class="color-picker-row">
+                      <input type="color" id="gradStartPicker" class="color-input" value="#7A2904">
+                      <input type="text" id="gradStartHex" class="minimal-input hex-input" value="#7A2904">
+                    </div>
+                  </div>
+                  <div class="builder-col">
+                    <span class="builder-sublabel">Gradient End</span>
+                    <div class="color-picker-row">
+                      <input type="color" id="gradEndPicker" class="color-input" value="#F05500">
+                      <input type="text" id="gradEndHex" class="minimal-input hex-input" value="#F05500">
+                    </div>
+                  </div>
+                  <div class="builder-col">
+                    <span class="builder-sublabel">Angle</span>
+                    <select id="gradAngleSelect" class="minimal-select">
+                      <option value="135deg" selected>135° (Diagonal)</option>
+                      <option value="90deg">90° (Top to Bottom)</option>
+                      <option value="180deg">180° (Left to Right)</option>
+                      <option value="45deg">45° (Upward)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="builder-preview-box">
+                  <span class="builder-sublabel">Live Studio Preview</span>
+                  <div class="builder-preview-swatch" id="gradLivePreview"></div>
+                </div>
+              </div>
+              <div class="form-actions" style="margin-top: 14px;">
+                <button type="button" class="btn-flat" id="applyCustomGradBtn">APPLY CUSTOM GRADIENT</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB: DYNAMIC CUSTOM WORKSPACE VIEW (Active when custom tab chosen) -->
+    <section class="tab-view" id="tabCustomWorkspace" aria-label="Custom Workspace View">
+      <header class="view-header">
+        <div class="header-titles">
+          <div class="custom-badge-pill" id="customWorkspaceScopeBadge">PRODUCTION OPERATIONS</div>
+          <h1 class="view-title" id="customWorkspaceTitle">Custom Workspace</h1>
+          <p class="view-subtitle" id="customWorkspaceSubtitle" style="display: none;"></p>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn-flat" id="customWorkspaceAddTaskBtn">+ ADD TASK HERE</button>
+          <button type="button" class="btn-flat secondary" id="customWorkspaceRemoveTabBtn">REMOVE TAB FROM NAV</button>
+        </div>
+      </header>
+
+      <!-- Custom KPI Strip -->
+      <section class="kpi-grid">
+        <div class="kpi-card featured">
+          <div class="kpi-header">
+            <span class="kpi-title">ACTIVE WORKSPACE ITEMS</span>
+            <span class="kpi-tag">PINNED FOCUS</span>
+          </div>
+          <div class="kpi-metric-large" id="customKpiTotal">02</div>
+          <div class="kpi-footer" id="customKpiFooter"></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">DUE THIS WEEK</span>
+            <span class="kpi-tag">OUTLOOK CALENDAR</span>
+          </div>
+          <div class="kpi-metric-large" id="customKpiDue">01</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">STATUS HEALTH</span>
+            <span class="kpi-tag">MG APPAREL</span>
+          </div>
+          <div class="kpi-metric-large">100%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">GRAPH SYNC</span>
+            <span class="kpi-tag">LIVE FEED</span>
+          </div>
+          <div class="kpi-metric-large">ACTIVE</div>
+        </div>
+      </section>
+
+      <!-- Custom Items Deck -->
+      <div class="tasks-deck" id="customWorkspaceDeck">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar (Active on Mobile <= 860px) -->
+  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobile Navigation">
+    <button type="button" class="mobile-nav-tab active" data-tab="dashboard" id="mobTabDashboard">
+      <svg class="mob-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      <span class="mob-label">Dash</span>
+    </button>
+    <button type="button" class="mobile-nav-tab" data-tab="pending" id="mobTabPending">
+      <svg class="mob-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="12 6 12 12 16 14"></polyline>
+        <circle cx="12" cy="12" r="9"></circle>
+      </svg>
+      <span class="mob-label">Pending</span>
+      <span class="mob-badge" id="mobPendingBadge">0</span>
+    </button>
+    <button type="button" class="mobile-nav-tab" data-tab="aligned" id="mobTabAligned">
+      <svg class="mob-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+      <span class="mob-label">Aligned</span>
+      <span class="mob-badge" id="mobAlignedBadge">0</span>
+    </button>
+    <button type="button" class="mobile-nav-tab" data-tab="calendar" id="mobTabCalendar">
+      <svg class="mob-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <span class="mob-label">Calendar</span>
+    </button>
+    <button type="button" class="mobile-nav-tab" data-tab="briefing" id="mobTabBriefing">
+      <svg class="mob-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+      </svg>
+      <span class="mob-label">Briefing</span>
+    </button>
+    <button type="button" class="mobile-nav-tab" data-tab="settings" id="mobTabSettings">
+      <svg class="mob-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="4" y1="21" x2="4" y2="14"></line>
+        <line x1="4" y1="10" x2="4" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12" y2="3"></line>
+        <line x1="20" y1="21" x2="20" y2="16"></line>
+        <line x1="20" y1="12" x2="20" y2="3"></line>
+      </svg>
+      <span class="mob-label">Settings</span>
+    </button>
+  </nav>
+
+  <!-- SLIDE-OUT INSPECTION SHEET & AI TRIAGE DRAWER -->
+  <div class="inspect-backdrop" id="inspectBackdrop"></div>
+  <aside class="inspect-drawer" id="inspectDrawer" aria-label="Task Inspection Sheet">
+    <div class="inspect-header">
+      <div>
+        <div class="inspect-badge">MICROSOFT GRAPH AI TRIAGE</div>
+        <h3 class="inspect-title" id="inspectItemTitle">Thread Subject</h3>
+        <div class="inspect-meta" id="inspectItemMeta">From: sender@mgapparel.com // 10:24 AM</div>
+      </div>
+      <button type="button" class="btn-inspect-close" id="closeInspectBtn" aria-label="Close Inspection Drawer">ESC</button>
+    </div>
+
+    <div class="inspect-body">
+      <!-- Section 1: AI Executive Thread Summary -->
+      <div class="inspect-section">
+        <div class="inspect-section-title">AI EXECUTIVE THREAD SUMMARY</div>
+        <div class="inspect-summary-box" id="inspectSummaryBox">
+          <!-- Bullet points -->
+        </div>
+        <button type="button" class="btn-micro" id="btnRunGeminiTriage" style="margin-top: 10px; width: 100%; border: 1px solid var(--color-terracotta); color: var(--color-terracotta);">RUN LIVE GEMINI AI TRIAGE</button>
+      </div>
+
+      <!-- Section 2: Extracted Deliverables & Actions -->
+      <div class="inspect-section">
+        <div class="inspect-section-title">EXTRACTED ACTION DELIVERABLES</div>
+        <div class="inspect-deliverables-list" id="inspectDeliverablesList">
+          <!-- Checkbox deliverables -->
+        </div>
+      </div>
+
+      <!-- Section 3: One-Click Canned Responses (SendMail API) -->
+      <div class="inspect-section">
+        <div class="inspect-section-title">ONE-CLICK CANNED RESPONSES (GRAPH SENDMAIL)</div>
+        <div class="canned-buttons-group">
+          <button type="button" class="btn-canned" data-canned="acknowledge">
+            <span class="canned-label">ACKNOWLEDGE</span>
+          </button>
+          <button type="button" class="btn-canned" data-canned="approve">
+            <span class="canned-label">APPROVE</span>
+          </button>
+          <button type="button" class="btn-canned" data-canned="defer">
+            <span class="canned-label">DEFER</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Section 4: Focus & Delegation Fast-Actions -->
+      <div class="inspect-section">
+        <div class="inspect-section-title">AUTOMATION &amp; WORKFLOW ACTIONS</div>
+        <div class="inspect-action-buttons">
+          <button type="button" class="btn-flat" id="inspectBlockFocusBtn">BLOCK 45M FOCUS SLOT</button>
+          <button type="button" class="btn-flat secondary" id="inspectDelegateBtn">DELEGATE TASK</button>
+          <button type="button" class="btn-flat secondary" id="inspectCompleteBtn">MARK COMPLETE</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- PRE-MEETING DOSSIER MODAL -->
+  <div class="dossier-modal-backdrop" id="dossierModal" aria-hidden="true">
+    <div class="dossier-card" role="dialog" aria-labelledby="dossierTitle">
+      <div class="dossier-header">
+        <div>
+          <div class="dossier-badge">PRE-MEETING PREPARATION DOSSIER</div>
+          <h3 class="dossier-title" id="dossierTitle">MG Apparel Meeting</h3>
+          <div class="dossier-meta" id="dossierMeta">11:00 - 12:00 // Microsoft Teams Video Conference</div>
+        </div>
+        <button type="button" class="modal-close-btn" id="closeDossierBtn" aria-label="Close dossier">ESC</button>
+      </div>
+      <div class="dossier-body">
+        <div class="dossier-section">
+          <div class="dossier-section-title">CONFIRMED ATTENDEES</div>
+          <div class="dossier-attendees" id="dossierAttendees"></div>
+        </div>
+        <div class="dossier-section">
+          <div class="dossier-section-title">EXECUTIVE DISCUSSION OBJECTIVES</div>
+          <div class="dossier-objectives" id="dossierObjectives"></div>
+        </div>
+        <div class="dossier-section">
+          <div class="dossier-section-title">LINKED OUTLOOK THREADS &amp; ONEDRIVE ATTACHMENTS</div>
+          <div class="dossier-files" id="dossierFiles"></div>
+        </div>
+        <div class="form-actions" style="margin-top: 24px;">
+          <button type="button" class="btn-flat" id="dossierOpenTeamsBtn">JOIN MICROSOFT TEAMS MEETING</button>
+          <button type="button" class="btn-flat secondary" id="dossierCloseActionBtn">DISMISS DOSSIER</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELEGATION MODAL -->
+  <div class="task-modal-backdrop" id="delegationModal" aria-hidden="true">
+    <div class="modal-sharp-card" role="dialog" aria-labelledby="delegationModalTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="delegationModalTitle">Delegate Action Item</h3>
+        <button type="button" class="modal-close-btn" id="closeDelegationModalBtn" aria-label="Close modal">ESC</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label class="form-label" for="delegateTaskTitleDisplay">Task Subject</label>
+          <input type="text" id="delegateTaskTitleDisplay" class="minimal-input" readonly>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="delegateAssigneeInput">Assignee (Team Member / Direct Report)</label>
+          <select id="delegateAssigneeInput" class="minimal-select">
+            <option value="Zubair Khan (Supply Chain &amp; Procurement)">Zubair Khan (Supply Chain &amp; Procurement)</option>
+            <option value="Sara Ahmed (Financial Controller)">Sara Ahmed (Financial Controller)</option>
+            <option value="Usman Tariq (Production Operations)">Usman Tariq (Production Operations)</option>
+            <option value="Ayesha Noor (Executive Assistant)">Ayesha Noor (Executive Assistant)</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="delegateNoteInput">Executive Instructions / Context</label>
+          <input type="text" id="delegateNoteInput" class="minimal-input" placeholder="e.g. Please review suppliers and prepare summary by 16:00.">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-flat" id="confirmDelegateBtn">SEND OUTLOOK DELEGATION</button>
+          <button type="button" class="btn-flat secondary" id="cancelDelegateBtn">CANCEL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOCUS SLOT BOOKER MODAL -->
+  <div class="task-modal-backdrop" id="focusModal" aria-hidden="true">
+    <div class="modal-sharp-card" role="dialog" aria-labelledby="focusModalTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="focusModalTitle">Block Focus Time Session</h3>
+        <button type="button" class="modal-close-btn" id="closeFocusModalBtn" aria-label="Close modal">ESC</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label class="form-label" for="focusTitleInput">Focus Session Name</label>
+          <input type="text" id="focusTitleInput" class="minimal-input" placeholder="e.g. DEEP WORK // Q4 SUPPLY CHAIN REVIEW">
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="focusDurationSelect">Session Duration</label>
+          <select id="focusDurationSelect" class="minimal-select">
+            <option value="45">45 Minutes (Sprint Focus Hold)</option>
+            <option value="90">90 Minutes (Deep Strategic Block)</option>
+            <option value="120">120 Minutes (Executive Immersion)</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="focusTimeSelect">Proposed Outlook Time Slot</label>
+          <select id="focusTimeSelect" class="minimal-select">
+            <option value="13:00 - 13:45">13:00 - 13:45 (Immediate Open Slot)</option>
+            <option value="15:30 - 17:00">15:30 - 17:00 (Afternoon Focus Window)</option>
+            <option value="09:00 - 09:45">Tomorrow 09:00 - 09:45 (Morning Prime)</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-flat" id="confirmFocusSlotBtn">BOOK TO OUTLOOK CALENDAR</button>
+          <button type="button" class="btn-flat secondary" id="cancelFocusModalBtn">CANCEL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTHENTICATION / LOGIN OVERLAY MODAL -->
+  <div class="auth-modal-backdrop" id="authModal" aria-hidden="true">
+    <div class="auth-card" role="dialog" aria-labelledby="authTitle">
+      <div class="auth-header">
+        <div class="auth-meta">OPS</div>
+        <h2 class="auth-title" id="authTitle">Sign in with Microsoft</h2>
+      </div>
+
+      <div class="auth-body">
+        <div class="auth-field">
+          <label class="form-label" for="loginEmailInput">Microsoft Account ID</label>
+          <input type="email" id="loginEmailInput" class="minimal-input" value="muhammad.ammar@mgapparel.com" placeholder="name@company.com">
+        </div>
+
+        <div class="auth-field">
+          <label class="form-label" for="loginTenantSelect">Tenant Scope</label>
+          <select id="loginTenantSelect" class="minimal-select">
+            <option value="mgapparel" selected>MG Apparel Enterprise Tenant (Azure AD)</option>
+            <option value="common">Work or School Account (Organizations)</option>
+            <option value="consumers">Personal Microsoft Account (Live, Hotmail)</option>
+          </select>
+        </div>
+
+        <div class="checkbox-row">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="rememberSessionCheck" checked>
+            <span class="check-box-square"></span>
+            <span class="check-label">Keep session authenticated for 30 days</span>
+          </label>
+        </div>
+
+        <button type="button" class="btn-sso-microsoft" id="ssoSubmitBtn">
+          <svg class="ms-logo-icon" viewBox="0 0 21 21" width="20" height="20">
+            <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+            <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+            <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+            <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+          </svg>
+          <span>CONTINUE WITH MICROSOFT ENTRA</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK ADD TASK MODAL -->
+  <div class="task-modal-backdrop" id="taskModal" aria-hidden="true">
+    <div class="modal-sharp-card" role="dialog" aria-labelledby="modalTaskTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTaskTitle">New Action Item</h3>
+        <button type="button" class="modal-close-btn" id="closeTaskModalBtn" aria-label="Close modal">ESC</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label class="form-label" for="newTaskTitle">Action Title</label>
+          <input type="text" id="newTaskTitle" class="minimal-input" placeholder="e.g. Complete Q4 Budget Forecast...">
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="newTaskSource">Source Context</label>
+          <select id="newTaskSource" class="minimal-select">
+            <option value="OUTLOOK MAIL">OUTLOOK MAIL (Flagged)</option>
+            <option value="MICROSOFT TO DO">MICROSOFT TO DO</option>
+            <option value="TEAMS @MENTION">TEAMS @MENTION</option>
+            <option value="DIRECT ACTION">DIRECT ACTION</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="newTaskAlignment">Strategic Alignment</label>
+          <select id="newTaskAlignment" class="minimal-select">
+            <option value="UNALIGNED">UNALIGNED (Triage Pending)</option>
+            <option value="OUTLOOK: EXECUTIVE & CLIENT CORRESPONDENCE">OUTLOOK: EXECUTIVE &amp; CLIENT CORRESPONDENCE</option>
+            <option value="MICROSOFT TO DO: STRATEGIC COMMITMENTS">MICROSOFT TO DO: STRATEGIC COMMITMENTS</option>
+            <option value="OUTLOOK CALENDAR: MEETING PREPARATION">OUTLOOK CALENDAR: MEETING PREPARATION</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="newTaskDate">Due Date</label>
+          <input type="date" id="newTaskDate" class="minimal-input" value="2026-10-15">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-flat" id="saveTaskBtn">CREATE TASK</button>
+          <button type="button" class="btn-flat secondary" id="cancelTaskBtn">CANCEL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVBAR QUICK ADD MODAL -->
+  <div class="task-modal-backdrop" id="navQuickAddModal" aria-hidden="true">
+    <div class="modal-sharp-card" role="dialog" aria-labelledby="quickAddTitle" style="max-width: 560px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="quickAddTitle">Quick Add Action</h3>
+        <button type="button" class="modal-close-btn" id="closeQuickAddModalBtn" aria-label="Close modal">ESC</button>
+      </div>
+      <div class="modal-body">
+        <div class="quick-add-tiles">
+          <button type="button" class="quick-action-tile" id="quickAddOutlookTaskBtn">
+            <span class="tile-tag">OUTLOOK QUEUE</span>
+            <span class="tile-title">+ New Action Task</span>
+          </button>
+          <button type="button" class="quick-action-tile" id="quickAddFocusSlotBtn">
+            <span class="tile-tag">CALENDAR HOLD</span>
+            <span class="tile-title">+ Block Focus Time</span>
+          </button>
+          <button type="button" class="quick-action-tile" id="quickAddNavbarTabBtn">
+            <span class="tile-tag">NAVBAR WORKSPACE</span>
+            <span class="tile-title">+ Add Navbar Tab</span>
+          </button>
+          <button type="button" class="quick-action-tile" id="quickAddVipSenderBtn">
+            <span class="tile-tag">EXECUTIVE</span>
+            <span class="tile-title">+ Add VIP Watchlist</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD CUSTOM NAVBAR TAB MODAL -->
+  <div class="task-modal-backdrop" id="customTabModal" aria-hidden="true">
+    <div class="modal-sharp-card" role="dialog" aria-labelledby="customTabModalTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="customTabModalTitle">Add Custom Workspace Tab to Navbar</h3>
+        <button type="button" class="modal-close-btn" id="closeCustomTabModalBtn" aria-label="Close modal">ESC</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label class="form-label" for="customTabNameInput">Workspace Tab Title</label>
+          <input type="text" id="customTabNameInput" class="minimal-input" placeholder="e.g. Denim Fabric R&amp;D or EU Export Logistics">
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="customTabScopeSelect">Context Scope</label>
+          <select id="customTabScopeSelect" class="minimal-select">
+            <option value="Flagged Outlook Threads">Flagged Outlook Threads</option>
+            <option value="Production Operations">Production Operations</option>
+            <option value="Supply Chain Milestones">Supply Chain Milestones</option>
+            <option value="Financial &amp; Executive Approvals">Financial &amp; Executive Approvals</option>
+            <option value="Quality Compliance Audits">Quality Compliance Audits</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="customTabGradientSelect">Tab Gradient Accent</label>
+          <select id="customTabGradientSelect" class="minimal-select">
+            <option value="terracotta-flame" selected>Terracotta Flame (#7A2904 → #A53C08 → #F05500)</option>
+            <option value="sunrise-amber">Sunrise Amber (#A53C08 → #F7803A → #FCA772)</option>
+            <option value="deep-ember">Deep Ember &amp; Rust (#300F03 → #A53C08)</option>
+            <option value="charcoal-fire">Charcoal Obsidian &amp; Fire (#1A1D20 → #A53C08)</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-flat" id="confirmAddCustomTabBtn">ADD TO NAVBAR</button>
+          <button type="button" class="btn-flat secondary" id="cancelCustomTabModalBtn">CANCEL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER (Clean typographic notifications, no glowing shadows) -->
+  <div class="toast-shelf" id="toastShelf" aria-live="polite"></div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
