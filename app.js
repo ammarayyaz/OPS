@@ -913,7 +913,7 @@ function initAuthAndSettings() {
   }
 
   if (dom.loginEmail) dom.loginEmail.value = state.userEmail;
-  if (dom.loginPassword) dom.loginPassword.value = state.userPassword;
+  if (dom.loginPassword) dom.loginPassword.value = "";
   if (dom.loginInitialsAvatar) dom.loginInitialsAvatar.textContent = getEmailInitials(state.userEmail);
   if (dom.settingUserEmail) dom.settingUserEmail.value = state.userEmail;
   if (dom.settingTenant) dom.settingTenant.value = state.tenant;
@@ -1094,14 +1094,34 @@ function triggerRobotGreeting(email, onComplete) {
 }
 
 function handleDirectLogin() {
-  const email = dom.loginEmail?.value.trim() || "muhammad.ammar@mgapparel.com";
+  const email = dom.loginEmail?.value.trim() || "";
   const password = dom.loginPassword?.value || "";
 
-  // Verify PIN / Password
-  if (state.userPassword && password && password !== state.userPassword) {
-    showToast("Incorrect security PIN or password. Please try again.");
+  if (!email) {
+    showToast("Please enter your Outlook / Microsoft Account ID.");
+    dom.loginEmail?.focus();
+    return;
+  }
+
+  // Strict check: Password must not be empty!
+  if (!password.trim()) {
+    showToast("Password required: Please enter your security PIN or password.");
     if (dom.loginPassword) {
       dom.loginPassword.focus();
+      dom.loginPassword.classList.add("input-error");
+      setTimeout(() => dom.loginPassword?.classList.remove("input-error"), 1500);
+    }
+    return;
+  }
+
+  // Strict check: Must match stored user password
+  if (password !== state.userPassword) {
+    showToast("Incorrect security PIN or password. Access denied.");
+    if (dom.loginPassword) {
+      dom.loginPassword.focus();
+      dom.loginPassword.select();
+      dom.loginPassword.classList.add("input-error");
+      setTimeout(() => dom.loginPassword?.classList.remove("input-error"), 1500);
     }
     return;
   }
@@ -1129,6 +1149,7 @@ function handleDirectLogin() {
 function lockSession() {
   state.authenticated = false;
   localStorage.removeItem("ops_auth");
+  if (dom.loginPassword) dom.loginPassword.value = "";
   if (dom.robotWelcomeScreen) dom.robotWelcomeScreen.style.display = "none";
   if (dom.loginScreen) dom.loginScreen.style.display = "flex";
   updateAuthUI();

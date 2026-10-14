@@ -2750,6 +2750,19 @@ body[data-theme="dark"] .login-card .minimal-input:focus {
   border-color: #FFFFFF !important;
 }
 
+/* Input Error State with Smooth Shake Effect */
+.minimal-input.input-error {
+  border-color: #FF4D4D !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.5) !important;
+  animation: shakeInput 0.35s ease-in-out;
+}
+
+@keyframes shakeInput {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
 /* Password Input Wrap & Toggle Feature */
 .password-input-wrap {
   position: relative;
